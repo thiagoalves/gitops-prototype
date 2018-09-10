@@ -1,0 +1,15 @@
+- hosts: tag_Group_gitops_asg
+  gather_facts: no
+  become: yes
+  pre_tasks:
+    - raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: no
+    - setup:
+        gather_subset: "!hardware"
+  roles:
+  - geerlingguy.docker
+  tasks:
+  - shell: docker ps
+    register: x
+    changed_when: no
+  - debug: var=x
