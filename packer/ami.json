@@ -53,7 +53,8 @@
     },
     {
       "type": "shell-local",
-      "script": "../test.sh"
+      "script": "../test.sh",
+      "execute_command": ["/bin/bash", "-c", "{{.Vars}} {{.Script}} ami"]
     }
   ]
 }

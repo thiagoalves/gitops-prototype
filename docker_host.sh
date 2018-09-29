@@ -10,4 +10,4 @@ ansible-galaxy install -r requirements.yml
 ansible-playbook -i custom_ec2.py -b -e host=tag_Group_gitops_asg docker_host.yml
 cd ..
 
-./test.sh
+./test.sh docker_host
