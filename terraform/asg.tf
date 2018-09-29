@@ -17,8 +17,11 @@ data "aws_security_group" "default" {
 
 data "aws_ami" "ubuntu" {
   most_recent = true
-  name_regex  = "^ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-\\d+"
-  owners      = ["099720109477"]
+  filter {
+    name      = "name"
+    values    = ["gitops_*"]
+  }
+  owners      = ["self"]
 }
 
 resource "aws_placement_group" "gitops-pg" {
@@ -34,6 +37,7 @@ resource "aws_key_pair" "gitops-key" {
 resource "aws_launch_template" "gitops-lt" {
   name_prefix = "gitops-instance-"
   image_id = "${data.aws_ami.ubuntu.id}"
+#  image_id = "ami-07d1311c682cb85b8"
   instance_type = "c5.large"
 
 #  block_device_mappings {
@@ -85,9 +89,9 @@ resource "aws_launch_template" "gitops-lt" {
 
 resource "aws_autoscaling_group" "gitops-asg" {
   availability_zones = ["us-west-1a"]
-  desired_capacity = 3
-  max_size = 3
-  min_size = 3
+  desired_capacity = 1
+  max_size = 1
+  min_size = 1
   placement_group = "${aws_placement_group.gitops-pg.id}"
   launch_template = {
     id = "${aws_launch_template.gitops-lt.id}"

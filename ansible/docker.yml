@@ -1,15 +1,11 @@
-- hosts: tag_Group_gitops_asg
+- hosts: "{{ host | default('localhost') }}"
+  connection: "{{ 'ssh' if host is defined else 'local' }}"
   gather_facts: no
-  become: yes
   pre_tasks:
-    - raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    - name: Ensure that python 2 is installed on the instance
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
       changed_when: no
     - setup:
         gather_subset: "!hardware"
   roles:
-  - geerlingguy.docker
-  tasks:
-  - shell: docker ps
-    register: x
-    changed_when: no
-  - debug: var=x
+  - { role: geerlingguy.docker, become: yes }

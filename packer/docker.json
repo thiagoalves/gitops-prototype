@@ -1,0 +1,55 @@
+{
+  "variables": {
+    "region": "us-west-1",
+    "subnet_id": "subnet-1cc6bb44",
+    "instance_type": "c5.large",
+    "ssh_username": "ubuntu"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "{{user `region`}}",
+      "subnet_id": "{{user `subnet_id`}}",
+      "instance_type": "{{user `instance_type`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ami_name": "gitops_{{timestamp}}",
+      "run_tags": {
+        "Product": "DockerAMI"
+      },
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "most_recent": true,
+        "owners": [
+          "099720109477"
+        ]
+      }
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/disable_pred_iface_names.sh",
+      "execute_command": "sudo chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}"
+    },
+    {
+      "type": "shell",
+      "inline": ["sudo reboot"],
+      "expect_disconnect": true
+    },
+    {
+      "type": "shell",
+      "pause_before": "5s",
+      "script": "scripts/install_ansible.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "../ansible/docker.yml",
+      "galaxy_file": "../ansible/requirements.yml"
+    }
+  ]
+}
