@@ -1,0 +1,23 @@
+- hosts: "{{ host | default('localhost') }}"
+  connection: "{{ 'ssh' if host is defined else 'local' }}"
+  gather_facts: no
+  pre_tasks:
+    - setup:
+        gather_subset: "!hardware"
+  tasks:
+    - set_fact:
+        commit_id: "{{ lookup('pipe', 'git rev-parse HEAD') }}"
+        branch: "{{ lookup('pipe', 'git rev-parse --abbrev-ref HEAD') }}"
+        commit_tag: "{{ lookup('pipe', 'git describe --exact-match --tags HEAD 2>/dev/null || echo unknown') }}"
+      tags: post_tasks
+    - copy:
+        dest: /etc/aurea_ansible_info
+        content: |
+          #This host was configured by ansible
+          config:
+            commit_id: {{ commit_id }}
+            branch: {{ branch }}
+            tag: {{ commit_tag }}
+    - command: cat /etc/aurea_ansible_info
+      register: ansible_info
+    - debug: var=ansible_info.stdout

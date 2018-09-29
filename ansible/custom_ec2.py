@@ -3,15 +3,15 @@
 import boto3
 import json
 
-client = boto3.client('ec2')
+client = boto3.client('ec2', region_name="us-west-1")
 
 filters = [{  
   'Name': 'tag:Group',
   'Values': ['gitops-asg']
 }]
 
-#response = client.describe_instances(Filters=filters)
-response = client.describe_instances()
+response = client.describe_instances(Filters=filters)
+#response = client.describe_instances()
 
 hosts = []
 
