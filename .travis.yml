@@ -9,7 +9,7 @@ services:
   - docker
 
 before_install:
-  - 'sudo docker pull ansible/ansible'
+  - 'sudo docker pull ansible/ansible:ubuntu1404'
 #  - 'sudo docker pull ${distribution}:${version}'
 #  - 'sudo docker build --no-cache --rm --file=travis/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible travis'
 
