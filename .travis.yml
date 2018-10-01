@@ -12,9 +12,6 @@ before_install:
   - 'sudo docker pull ${distribution}:${version}'
   - 'sudo docker build --no-cache --rm --file=travis/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible travis'
 
-ansible-galaxy install -r requirements.yml
-ansible-playbook -i custom_ec2.py -b -e host=tag_Group_gitops_asg docker_host.yml
-
 script:
   - container_id=$(mktemp)
   - 'sudo docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/tmp/ansible:ro ${distribution}-${version}:ansible > "${container_id}"'
