@@ -1,7 +1,7 @@
 {
   "variables": {
-    "region": "us-west-1",
-    "subnet_id": "subnet-1cc6bb44",
+    "region": "${var.region}",
+    "subnet_id": "${var.subnet_id}",
     "instance_type": "c5.large",
     "ssh_username": "ubuntu"
   },
