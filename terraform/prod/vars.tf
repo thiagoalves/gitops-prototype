@@ -1,6 +1,6 @@
-variable "availability_zone" {
+variable "region" {
   description = ""
-  default     = "us-east-2a"
+  default     = "${var.TF_VAR_AWS_REGION}"
 }
 
 variable "instance_type" {

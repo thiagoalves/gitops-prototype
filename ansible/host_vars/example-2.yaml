@@ -1,0 +1,6 @@
+containers:
+- name: c1
+  git:
+  	remote-url: https://github.com/thiagoalves/gitops-samples/
+    branch: master
+    path: a/docker-compose.yml

@@ -1,8 +1,3 @@
-variable "availability_zone" {
-  description = ""
-  default     = "us-west-1a"
-}
-
 variable "instance_type" {
   description = ""
   default     = "c5.large"

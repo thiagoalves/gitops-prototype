@@ -3,8 +3,12 @@ variable "public_key" {
 }
 
 variable "availability_zone" {
-	description = ""
+	default = "us-west-1a"
 }
+
+#locals {
+#  availability_zone = "${concat(var.region, "a")}"
+#}
 
 variable "instance_type" {
 	description = ""

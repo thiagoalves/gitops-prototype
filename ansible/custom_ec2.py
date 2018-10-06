@@ -2,8 +2,12 @@
 
 import boto3
 import json
+import os
 
-client = boto3.client('ec2', region_name="us-west-1")
+if 'AWS_REGION' in os.environ:
+  client = boto3.client('ec2', region_name=os.environ['AWS_REGION'])
+else:
+  client = boto3.client('ec2')
 
 filters = [{  
   'Name': 'tag:Group',
@@ -11,7 +15,6 @@ filters = [{
 }]
 
 response = client.describe_instances(Filters=filters)
-#response = client.describe_instances()
 
 hosts = []
 
