@@ -11,7 +11,8 @@ cd $rootdir
 
 cd ansible
 ansible-galaxy install -r requirements.yaml
-ansible-playbook -i ec2.py -b -e host=tag_Group_gitops_asg docker_host.yaml
+#ansible-playbook -i ec2.py -b -e host=tag_Group_gitops_asg docker_host.yaml
+
 cd $rootdir
 
 ./test.sh docker_host
