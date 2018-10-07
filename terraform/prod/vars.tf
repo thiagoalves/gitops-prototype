@@ -1,8 +1,3 @@
-variable "region" {
-  description = ""
-  default     = "${var.TF_VAR_AWS_REGION}"
-}
-
 variable "instance_type" {
   description = ""
   default     = "c5.large"

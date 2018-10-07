@@ -20,4 +20,9 @@
             tag: {{ commit_tag }}
     - command: cat /etc/aurea_ansible_info
       register: ansible_info
+      changed_when: false
     - debug: var=ansible_info.stdout
+    - command: ec2metadata --availability-zone
+      register: ec2metadata
+      changed_when: False
+    - debug: var=ec2metadata.stdout
