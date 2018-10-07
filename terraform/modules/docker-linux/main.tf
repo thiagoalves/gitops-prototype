@@ -101,7 +101,7 @@ resource "aws_instance" "dl-instance" {
   }
 
   provisioner "local-exec" {
-    command = "sleep 60; cd ../../ansible; ansible-galaxy install -r requirements.yaml; ansible-playbook -i ec2.py -b -e host='tag_Region_${replace(data.aws_region.current.name, "-", "_")}:&tag_Group_gitops_asg' docker_host.yaml"
+    command = "cd ../../ansible; ansible-galaxy install -r requirements.yaml; ansible-playbook -i provisioned_host, -e host=provisioned_host -e ansible_ssh_host=${self.public_ip} docker_host.yaml"
   }
 
 # For spot only
