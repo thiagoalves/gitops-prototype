@@ -104,6 +104,10 @@ resource "aws_instance" "dl-instance" {
     command = "cd ../../ansible; ansible-galaxy install -r requirements.yaml; ansible-playbook -i provisioned_host, -e host=provisioned_host -e ansible_ssh_host=${self.public_ip} docker_host.yaml"
   }
 
+  provisioner "local-exec" {
+    command = "bash -c '../../test.sh docker_host'"
+  }
+
 # For spot only
 #  provisioner "local-exec" {
 #    command = "aws ec2 create-tags --resources ${self.spot_instance_id} --tags Key=Name,Value=gitops-instance-1"
