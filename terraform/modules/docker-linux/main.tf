@@ -86,7 +86,7 @@ resource "aws_instance" "dl-instance" {
   instance_type = "${var.instance_type}"
   ebs_optimized = "${var.ebs_optimized}"
   vpc_security_group_ids = ["${aws_security_group.dl-main-sg.id}"]
-  user_data = "${var.user_data}"
+  user_data = "${file("user_data.sh")}"
   availability_zone = "${local.availability_zone}"
   placement_group = "${aws_placement_group.dl-pg.id}"
   key_name        = "${aws_key_pair.dl-key.id}"
