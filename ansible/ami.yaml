@@ -8,4 +8,5 @@
     - setup:
         gather_subset: "!hardware"
   roles:
-  - { role: geerlingguy.docker, become: yes }
+  - { role: geerlingguy.docker, become: yes, tags: docker }
+  - { role: packages, become: yes, tags: packages }

@@ -9,4 +9,6 @@ module "docker_linux" {
   public_key             = "${var.public_key}"
 
   user_data = "${base64encode("touch /tmp/test-staging")}"
+
+  ips = "${var.ips}"
 }

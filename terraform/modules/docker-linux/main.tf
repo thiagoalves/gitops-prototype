@@ -62,6 +62,34 @@ resource "aws_security_group" "dl-main-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port	= 0
+    to_port	= 0
+    protocol	= "-1"
+    self	= true
+  }
+
   egress {
     from_port       = 0
     to_port         = 0
@@ -80,7 +108,36 @@ resource "aws_key_pair" "dl-key" {
   public_key = "${var.public_key}"
 }
 
-resource "aws_instance" "dl-instance" {
+resource "aws_instance" "dl-swarm-master" {
+  count = 3
+  ami = "${data.aws_ami.ubuntu.id}"
+  instance_type = "${var.instance_type}"
+  ebs_optimized = "${var.ebs_optimized}"
+  vpc_security_group_ids = ["${aws_security_group.dl-main-sg.id}"]
+  user_data = "${file("user_data.sh")}"
+  availability_zone = "${local.availability_zone}"
+  placement_group = "${aws_placement_group.dl-pg.id}"
+  key_name        = "${aws_key_pair.dl-key.id}"
+  subnet_id       = "${aws_subnet.dl-public-subnet-1.id}"
+  associate_public_ip_address = true
+
+  tags {
+    Name = "dl-swarm-master-${count.index+1}"
+    Owner = "talves"
+    Group = "gitops-asg"
+    Region = "${data.aws_region.current.name}"
+  }
+
+  provisioner "local-exec" {
+    command = "cd ../../ansible; ansible-galaxy install -r requirements.yaml; ansible-playbook -i provisioned_host, -e host=provisioned_host -e ansible_ssh_host=${self.public_ip} docker_host.yaml"
+  }
+
+  provisioner "local-exec" {
+    command = "bash -c '../../test.sh docker_host'"
+  }
+}
+
+resource "aws_instance" "dl-swarm-worker" {
   count = 2
   ami = "${data.aws_ami.ubuntu.id}"
   instance_type = "${var.instance_type}"
@@ -94,7 +151,7 @@ resource "aws_instance" "dl-instance" {
   associate_public_ip_address = true
 
   tags {
-    Name = "example-${count.index+1}"
+    Name = "dl-swarm-worker-${count.index+1}"
     Owner = "talves"
     Group = "gitops-asg"
     Region = "${data.aws_region.current.name}"

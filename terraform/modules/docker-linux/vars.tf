@@ -14,3 +14,8 @@ variable "ebs_optimized" {
 variable "user_data" {
 	description = ""
 }
+
+variable "ips" {
+	description = ""
+	type = "map"
+}

@@ -12,3 +12,17 @@ variable "user_data" {
   description = ""
   default     = ""
 }
+
+variable "ips" {
+  type    = "map"
+  default = {
+    "a" = {
+      "aa" = "1"
+      "ab" = "2"
+    }
+    "b" = {
+      "ba" = "3"
+      "bb" = "4"
+    }
+  }
+}
